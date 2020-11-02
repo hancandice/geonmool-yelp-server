@@ -1,31 +1,44 @@
 require("dotenv").config();
 const express = require("express");
+const db = require("./db");
 const morgan = require("morgan"); //morgan middleware
 const app = express();
 
 app.use(express.json()); //express middleware
 
 //Get all Restaurants
-app.get("/api/v1/restaurants", (req, res) => {
-  console.log("route handler runs");
-  res.status(200).json({
-    status: "success",
-    data: {
-      restaurant: ["McDonalds", "Bapuri", "79Gukbap"],
-    },
-  });
+app.get("/api/v1/restaurants", async (req, res) => {
+  try {
+    const results = await db.query("select * from restaurants");
+    console.log(results);
+    res.status(200).json({
+      status: "success",
+      results: results.rows.length,
+      data: {
+        restaurant: results.rows,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 //Get a individual Restaurant
-app.get("/api/v1/restaurants/:id", (req, res) => {
-  console.log(req.params);
+app.get("/api/v1/restaurants/:id", async (req, res) => {
+  try {
+    const results = await db.query("select * from restaurants where id = $1", [
+      req.params.id,
+    ]); // never ever use string interpolation
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      restaurant: ["McDonalds"],
-    },
-  });
+    res.status(200).json({
+      status: "success",
+      data: {
+        restaurant: results.rows[0],
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 //Create a Restaurant
