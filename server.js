@@ -4,10 +4,13 @@ const express = require("express");
 
 const app = express();
 
-app.get("/getRestaurants", (req, res) => {
-  res.status(404).json({
+// Get all Restaurants
+app.get("/api/vi/restaurants", (req, res) => {
+  res.status(200).json({
     status: "success",
-    restaurant: "McDonalds",
+    data: {
+      restaurant: ["McDonalds", "Wendys"],
+    },
   });
 });
 //http://localhost:3006/getRestaurants
