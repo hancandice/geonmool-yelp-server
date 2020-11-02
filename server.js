@@ -11,7 +11,7 @@ app.get("/getRestaurants", (req, res) => {
   });
 });
 //http://localhost:3006/getRestaurants
-//To Change the status code: res.status(status_code)
+//To Change the status code: res.status(status_code_number)
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
