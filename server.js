@@ -1,20 +1,77 @@
 require("dotenv").config();
-
 const express = require("express");
-
+const db = require("./db");
+const morgan = require("morgan"); //morgan middleware
 const app = express();
 
-// Get all Restaurants
-app.get("/api/vi/restaurants", (req, res) => {
-  res.status(200).json({
+app.use(express.json()); //express middleware
+
+//Get all Restaurants
+app.get("/api/v1/restaurants", async (req, res) => {
+  try {
+    const results = await db.query("select * from restaurants");
+    console.log(results);
+    res.status(200).json({
+      status: "success",
+      results: results.rows.length,
+      data: {
+        restaurant: results.rows,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+//Get a individual Restaurant
+app.get("/api/v1/restaurants/:id", async (req, res) => {
+  try {
+    const results = await db.query("select * from restaurants where id = $1", [
+      req.params.id,
+    ]); // never ever use string interpolation
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        restaurant: results.rows[0],
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+//Create a Restaurant
+app.post("/api/v1/restaurants", (req, res) => {
+  console.log(req.body);
+  res.status(201).json({
     status: "success",
     data: {
-      restaurant: ["McDonalds", "Wendys"],
+      restaurant: ["McDonalds"],
     },
   });
 });
-//http://localhost:3006/getRestaurants
-//To Change the status code: res.status(status_code_number)
+
+//Update Restaurants
+
+app.put("/api/v1/restaurants/:id", (req, res) => {
+  console.log(req.params.id);
+  console.log(req.body);
+  res.status(200).json({
+    status: "success",
+    data: {
+      restaurant: ["McDonalds"],
+    },
+  });
+});
+
+//Delete Restaurant
+
+app.delete("/api/v1/restaurants/:id", (req, res) => {
+  res.status(204).json({
+    status: "success",
+  });
+});
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
