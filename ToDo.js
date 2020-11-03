@@ -1,1 +1,1 @@
-// START from [Create a Restaurant - route]
+// START from [Update a Restaurant - route]
