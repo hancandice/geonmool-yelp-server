@@ -50,7 +50,12 @@ app.post("/api/v1/restaurants", async (req, res) => {
   try {
     const results = await db.query(
       "INSERT INTO restaurants (name, location, price_range, menu) values ($1, $2, $3, $4) returning *",
-      [req.body.name, req.body.location, req.body.price_range, req.body.menu]
+      [
+        req.body.name,
+        req.body.location,
+        parseInt(req.body.price_range),
+        req.body.menu,
+      ]
     );
 
     res.status(201).json({
@@ -73,7 +78,7 @@ app.put("/api/v1/restaurants/:id", async (req, res) => {
       [
         req.body.name,
         req.body.location,
-        req.body.price_range,
+        parseInt(req.body.price_range),
         req.body.menu,
         req.params.id,
       ]
