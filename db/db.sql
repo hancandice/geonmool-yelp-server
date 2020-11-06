@@ -30,3 +30,13 @@ select location, count(location) from restaurants group by location;
 
 select restaurant_id, count(restaurant_id) from reviews group by restaurant_id;
 
+select restaurant_id, AVG(rating), count(reviews) from reviews group by restaurant_id;
+
+select * from restaurants inner join reviews on restaurants.id = reviews.restaurant_id;
+
+
+select * from restaurants left join reviews on restaurants.id = reviews.restaurant_id;
+
+
+select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating), 1) as average_rating from reviews group by restaurant_id) reviews on restaurants.id = reviews.restaurant_id;
+
